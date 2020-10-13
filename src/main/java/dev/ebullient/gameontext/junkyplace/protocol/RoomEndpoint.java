@@ -6,8 +6,6 @@ import java.util.logging.Level;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.CloseReason;
-import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -41,7 +39,7 @@ public class RoomEndpoint {
         Log.log(Level.FINE, this, "A new connection has been made to the room.");
 
         // All we have to do in onOpen is send the acknowledgement
-        sendMessage(session, Message.ACK_MSG);
+        sendMessageToSession(session, Message.ACK_MSG);
     }
 
     @OnClose

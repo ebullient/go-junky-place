@@ -8,9 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.websocket.DecodeException;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jboss.logmanager.Level;

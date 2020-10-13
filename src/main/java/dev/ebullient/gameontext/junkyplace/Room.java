@@ -214,7 +214,7 @@ public class Room {
         }
     }
 
-        /**
+    /**
      * Given a lower case string describing the direction someone wants
      * to go (/go N, or /go North), filter or transform that into a recognizable
      * id that can be used as an index into a known list of exits. Always valid
