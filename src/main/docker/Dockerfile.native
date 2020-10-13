@@ -5,13 +5,11 @@
 #
 # mvn package -Pnative -Dquarkus.native.container-build=true
 #
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/junky-place .
+# The build includes quarkus-jib, which will create the container
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/junky-place
+# docker run -i --rm -p 8080:8080 ebullient/junky-place:latest-native
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
@@ -24,4 +22,4 @@ COPY --chown=1001:root target/*-runner /work/application
 EXPOSE 8080
 USER 1001
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=${PORT}"]
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
