@@ -14,11 +14,11 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-plugin.version>1.8.1.Final</quarkus-plugin.version>
+    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+
+    <quarkus.version>1.8.2.Final</quarkus.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>1.8.1.Final</quarkus.platform.version>
-    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -26,7 +26,7 @@
       <dependency>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
+        <version>${quarkus.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -52,6 +52,11 @@
     </dependency>
 
     <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -67,7 +72,7 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <version>${quarkus.version}</version>
         <executions>
           <execution>
             <goals>
@@ -106,10 +111,45 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>show-profiles</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>active-profiles</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
   <profiles>
+    <profile>
+      <id>jvm-image</id>
+      <activation>
+        <property>
+          <name>jvm-image</name>
+        </property>
+      </activation>
+      <properties>
+        <quarkus.container-image.tag>latest-jvm</quarkus.container-image.tag>
+        <quarkus.container-image.build>true</quarkus.container-image.build>
+        <quarkus.container-image.name>${project.artifactId}</quarkus.container-image.name>
+        <quarkus.container-image.group>ebullient</quarkus.container-image.group>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+
     <profile>
       <id>native</id>
       <activation>
@@ -142,7 +182,17 @@
       </build>
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
+        <quarkus.container-image.tag>latest-native</quarkus.container-image.tag>
+        <quarkus.container-image.build>true</quarkus.container-image.build>
+        <quarkus.container-image.name>${project.artifactId}</quarkus.container-image.name>
+        <quarkus.container-image.group>ebullient</quarkus.container-image.group>
       </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 </project>
