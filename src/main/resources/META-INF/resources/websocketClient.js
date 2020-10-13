@@ -1,6 +1,11 @@
 var websocket = null;
-var websocketUrl = "wss://" + window.document.location.host + "/room";
-var healthUrl = "https://" + window.document.location.host + "/health";
+
+var websocketUrl = (window.document.location.protocol === 'https:' ? 'wss:' : 'ws:')
+    + "//" + window.document.location.host + "/room";
+var healthUrl = window.document.location.protocol + "//" + window.document.location.host + "/health";
+console.log("%o %o -> %o %o", window.document.location.protocol, window.document.location.host,
+    websocketUrl, healthUrl);
+
 
 var inputMessage = document.getElementById("inputmessage");
 var connectButton = document.getElementById("connectButton");
@@ -87,64 +92,64 @@ function disconnect() {
   }
 }
 
-function hello() {
+function roomHello() {
   console.log("hello %o", websocket);
   //    roomHello,<roomId>,{
   //        "username": "username",
   //        "userId": "<userId>",
   //        "version": 1|2
   //    }
-  var roomHello = {
+  var helloMsg = {
     "username": "webtest",
     "userId": "dummyId",
     "version": 2
   };
 
-  sendSocket("roomHello," + roomId.value + "," + JSON.stringify(roomHello));
+  sendSocket("roomHello," + roomId.value + "," + JSON.stringify(helloMsg));
 }
 
-function goodbye() {
+function roomGoodbye() {
   console.log("goodbye %o", websocket);
   //    roomGoodbye,<roomId>,{
   //        "username": "username",
   //        "userId": "<userId>"
   //    }
-  var roomGoodbye = {
+  var goodbyeMsg = {
     "username": "webtest",
     "userId": "dummyId"
   };
 
-  sendSocket("roomGoodbye," + roomId.value + "," + JSON.stringify(roomGoodbye));
+  sendSocket("roomGoodbye," + roomId.value + "," + JSON.stringify(goodbyeMsg));
 }
 
-function join() {
+function roomJoin() {
   console.log("join %o", websocket);
   //    roomJoin,<roomId>,{
   //        "username": "username",
   //        "userId": "<userId>",
   //        "version": 2
   //    }
-  var roomJoin = {
+  var joinMsg = {
     "username": "webtest",
     "userId": "dummyId",
     "version": 2
   };
 
-  sendSocket("roomJoin," + roomId.value + "," + JSON.stringify(roomJoin));
+  sendSocket("roomJoin," + roomId.value + "," + JSON.stringify(joinMsg));
 }
 
-function part() {
+function roomPart() {
   console.log("part %o", websocket);
   //    roomPart,<roomId>,{
   //        "username": "username",
   //        "userId": "<userId>"
   //    }
-  var roomPart = {
+  var partMsg = {
     "username": "webtest",
     "userId": "dummyId"
   };
 
-  sendSocket("roomPart," + roomId.value + "," + JSON.stringify(roomPart));
+  sendSocket("roomPart," + roomId.value + "," + JSON.stringify(partMsg));
 }
 
 function emulateClient() {
