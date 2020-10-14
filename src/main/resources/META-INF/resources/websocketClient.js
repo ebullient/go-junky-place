@@ -1,10 +1,12 @@
 var websocket = null;
 
 var websocketUrl = (window.document.location.protocol === 'https:' ? 'wss:' : 'ws:')
-    + "//" + window.document.location.host + "/room";
-var healthUrl = window.document.location.protocol + "//" + window.document.location.host + "/health";
-console.log("%o %o -> %o %o", window.document.location.protocol, window.document.location.host,
-    websocketUrl, healthUrl);
+    + "//" + window.document.location.host + "/junkyplace/room";
+var healthUrl = window.document.location.protocol + "//" + window.document.location.host + "/junkyplace/health";
+var metricsUrl = window.document.location.protocol + "//" + window.document.location.host + "/junkyplace/metrics";
+
+console.log("%o %o -> %o %o %o", window.document.location.protocol, window.document.location.host,
+    websocketUrl, healthUrl, metricsUrl);
 
 
 var inputMessage = document.getElementById("inputmessage");
@@ -22,6 +24,7 @@ console.log("buttons %o %o %o %o %o %o %o",
 
 document.getElementById("socketUrl").innerHTML = websocketUrl;
 document.getElementById("healthUrl").innerHTML = healthUrl;
+document.getElementById("metricsUrl").innerHTML = metricsUrl;
 
 function connect() {
   console.log("connect %o", websocket);

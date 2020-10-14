@@ -3,7 +3,7 @@ package dev.ebullient.gameontext.junkyplace;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-@Path("/hello")
+@Path("/junkyplace/hello")
 public class RestApplication {
 
     @GET

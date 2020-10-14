@@ -24,7 +24,7 @@ import dev.ebullient.gameontext.junkyplace.Room;
  * will be created for every connected client.
  * https://book.game-on.org/microservices/WebSocketProtocol.html
  */
-@ServerEndpoint(value = "/room", decoders = MessageDecoder.class, encoders = MessageEncoder.class)
+@ServerEndpoint(value = "/junkyplace/room", decoders = MessageDecoder.class, encoders = MessageEncoder.class)
 @ApplicationScoped
 public class RoomEndpoint {
 
@@ -99,7 +99,7 @@ public class RoomEndpoint {
     private void sendMessageToSession(Session session, Message message) {
         if (session.isOpen()) {
             session.getAsyncRemote().sendObject(message, result -> {
-                if ( result.getException() != null ) {
+                if (result.getException() != null) {
                     Log.log(Level.FINE, this, "Unexpected condition writing message", result.getException());
                 }
             });
