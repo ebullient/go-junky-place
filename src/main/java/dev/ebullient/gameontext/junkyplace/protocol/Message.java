@@ -8,14 +8,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.websocket.DecodeException;
 
+import org.jboss.logmanager.Level;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.jboss.logmanager.Level;
-
 import dev.ebullient.gameontext.junkyplace.Log;
 import dev.ebullient.gameontext.junkyplace.RoomDescription;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
+@RegisterForReflection
 public class Message {
 
     static final ObjectMapper mapper = new ObjectMapper();
@@ -121,8 +123,8 @@ public class Message {
     /**
      * Indicates that a player can leave by the requested exit (`exitId`).
      *
-     * @param userId  Targeted user
-     * @param exitId  Direction the user will be exiting (used as a lookup key)
+     * @param userId Targeted user
+     * @param exitId Direction the user will be exiting (used as a lookup key)
      * @param message Message to be displayed when the player leaves the room
      * @return constructed message
      */
@@ -137,10 +139,10 @@ public class Message {
     /**
      * Used for test purposes, create a message targeted for the room
      *
-     * @param roomId   Id of target room
-     * @param userId   Id of user that sent the message
+     * @param roomId Id of target room
+     * @param userId Id of user that sent the message
      * @param username username for user that sent the message
-     * @param content  content of message
+     * @param content content of message
      * @return constructed message
      */
     public static Message createRoomMessage(String roomId, String userId, String username, String content) {
@@ -151,10 +153,10 @@ public class Message {
     /**
      * Used for test purposes, create a room hello message
      *
-     * @param roomId   Id of target room
-     * @param userId   Id of user entering the room
+     * @param roomId Id of target room
+     * @param userId Id of user entering the room
      * @param username username for user entering the room
-     * @param version  version negotiated with mediator
+     * @param version version negotiated with mediator
      * @return constructed message
      */
     public static Message createRoomHello(String roomId, String userId, String username, long version) {
@@ -165,10 +167,10 @@ public class Message {
     /**
      * Used for test purposes, create a room hello message
      *
-     * @param roomId   Id of target room
-     * @param userId   Id of user entering the room
+     * @param roomId Id of target room
+     * @param userId Id of user entering the room
      * @param username username for user entering the room
-     * @param version  version negotiated with mediator
+     * @param version version negotiated with mediator
      * @return constructed message
      */
     public static Message createRoomGoodbye(String roomId, String userId, String username) {
@@ -179,10 +181,10 @@ public class Message {
     /**
      * Used for test purposes, create a room hello message
      *
-     * @param roomId   Id of target room
-     * @param userId   Id of user entering the room
+     * @param roomId Id of target room
+     * @param userId Id of user entering the room
      * @param username username for user entering the room
-     * @param version  version negotiated with mediator
+     * @param version version negotiated with mediator
      * @return constructed message
      */
     public static Message createRoomJoin(String roomId, String userId, String username, long version) {
@@ -193,10 +195,10 @@ public class Message {
     /**
      * Used for test purposes, create a room hello message
      *
-     * @param roomId   Id of target room
-     * @param userId   Id of user entering the room
+     * @param roomId Id of target room
+     * @param userId Id of user entering the room
      * @param username username for user entering the room
-     * @param version  version negotiated with mediator
+     * @param version version negotiated with mediator
      * @return constructed message
      */
     public static Message createRoomPart(String roomId, String userId, String username) {
@@ -259,7 +261,7 @@ public class Message {
     /**
      * Construct a new outbound message
      *
-     * @param target   General target for the message
+     * @param target General target for the message
      * @param targetId Specific player id, '*', or null (for
      * @param payload
      */
@@ -396,7 +398,6 @@ public class Message {
      */
     public static final Message ACK_MSG = new Message(Target.ack, "", "{\"version\":[1,2]}");
 
-
     /** Messages sent to everyone */
     private static final String ALL = "*";
 
@@ -414,7 +415,8 @@ public class Message {
         public Map<String, String> content = new HashMap<>();
         public String bookmark = bookmark();
 
-        EventMessage() {}
+        EventMessage() {
+        }
 
         EventMessage(String userid, String message) {
             content.put(userid, message);
@@ -434,7 +436,8 @@ public class Message {
         public String content;
         public String bookmark = bookmark();
 
-        RoomChat() {}
+        RoomChat() {
+        }
 
         RoomChat(String username, String message) {
             this.username = username;
@@ -453,7 +456,8 @@ public class Message {
         public String content;
         public String exitId;
 
-        RoomPlayerLocation() {}
+        RoomPlayerLocation() {
+        }
 
         RoomPlayerLocation(String exitId, String message) {
             this.exitId = exitId;
@@ -473,7 +477,8 @@ public class Message {
         public String userId;
         public String content;
 
-        ClientMessage() {}
+        ClientMessage() {
+        }
 
         ClientMessage(String userId, String username, String content) {
             this.userId = userId;
@@ -499,7 +504,8 @@ public class Message {
         public String userId;
         public long version = 2;
 
-        MediatorRoomHello() {}
+        MediatorRoomHello() {
+        }
 
         MediatorRoomHello(boolean isHello, String userId, String username, long version) {
             this.type = isHello ? "roomHello" : "roomJoin";
@@ -523,7 +529,8 @@ public class Message {
         public String username;
         public String userId;
 
-        MediatorRoomGoodbye() {}
+        MediatorRoomGoodbye() {
+        }
 
         MediatorRoomGoodbye(boolean isGoodbye, String username, String userId) {
             this.type = isGoodbye ? "roomGoodbye" : "roomPart";

@@ -87,7 +87,7 @@ public class MessageTest {
         System.out.println(s);
 
         Assertions.assertTrue(s.startsWith("player,user1,{\"type\":\"location\""), s);
-        Assertions.assertTrue(s.contains("\"name\":\"" + roomDescription.getName()+ "\""), s);
+        Assertions.assertTrue(s.contains("\"name\":\"" + roomDescription.getName() + "\""), s);
         Assertions.assertTrue(s.contains("\"fullName\":\"" + roomDescription.getFullName() + "\""), s);
         Assertions.assertTrue(s.contains("\"description\":\"" + roomDescription.getDescription() + "\""), s);
 

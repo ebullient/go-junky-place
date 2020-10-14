@@ -23,7 +23,6 @@ public class RoomDescription {
     //      "roomInventory": ["itemA","itemB"]
     //  }
 
-
     final String type = "location";
 
     String name = "junkyPlace";
@@ -36,14 +35,13 @@ public class RoomDescription {
 
     public RoomDescription() {
         commands.put("/use",
-        "Take, hold, or deploy (something) as a means of accomplishing or achieving something");
+                "Take, hold, or deploy (something) as a means of accomplishing or achieving something");
 
         roomInventory.add("red teddy bear");
         roomInventory.add("big pile of mud");
         roomInventory.add("moon diagram");
         roomInventory.add("bookshelf");
     }
-
 
     @Override
     public String toString() {

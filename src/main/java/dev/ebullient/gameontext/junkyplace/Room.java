@@ -1,12 +1,12 @@
 package dev.ebullient.gameontext.junkyplace;
 
+import java.util.Locale;
+import java.util.logging.Level;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
-
-import java.util.Locale;
-import java.util.logging.Level;
 
 import dev.ebullient.gameontext.junkyplace.protocol.Message;
 import dev.ebullient.gameontext.junkyplace.protocol.RoomEndpoint;
@@ -52,7 +52,7 @@ public class Room {
 
         // Who doesn't love switch on strings in Java 8?
         switch (message.getTarget()) {
-            case roomHello :
+            case roomHello:
                 Message.MediatorRoomHello helloMsg = message.getParsedBody();
 
                 // Send location message
@@ -63,33 +63,34 @@ public class Room {
                         Message.createBroadcastEvent(String.format(HELLO_ALL, helloMsg.username), helloMsg.userId, HELLO_USER));
                 break;
 
-            case roomJoin :
+            case roomJoin:
                 Message.MediatorRoomHello joinMsg = message.getParsedBody();
 
                 // Send location message
                 endpoint.sendMessage(session, Message.createLocationMessage(joinMsg.userId, roomDescription));
                 break;
 
-            case roomGoodbye  :
+            case roomGoodbye:
                 Message.MediatorRoomGoodbye goodbyeMsg = message.getParsedBody();
 
                 // Say goodbye to person leaving the room
                 endpoint.sendMessage(session,
-                    Message.createBroadcastEvent(String.format(GOODBYE_ALL, goodbyeMsg.username), goodbyeMsg.userId, GOODBYE_USER));
+                        Message.createBroadcastEvent(String.format(GOODBYE_ALL, goodbyeMsg.username), goodbyeMsg.userId,
+                                GOODBYE_USER));
 
                 break;
 
-            case room :
+            case room:
                 Message.ClientMessage clientMsg = message.getParsedBody();
-                if ( clientMsg.content.charAt(0) == '/') {
+                if (clientMsg.content.charAt(0) == '/') {
                     processCommand(clientMsg.userId, clientMsg.username, clientMsg.content, endpoint, session);
                 } else {
                     endpoint.sendMessage(session,
-                        Message.createChatMessage(clientMsg.username, clientMsg.content));
+                            Message.createChatMessage(clientMsg.username, clientMsg.content));
                 }
                 break;
 
-            default :
+            default:
                 // discard
                 break;
         }
@@ -188,7 +189,8 @@ public class Room {
                         endpoint.sendMessage(session,
                                 Message.createBroadcastEvent(username
                                         + " picks up the moon diagram, and scrunches it into a ball! After a brief moment, "
-                                        + username + " smiles, smoothes it out again, and lets the diagram float back to the floor",
+                                        + username
+                                        + " smiles, smoothes it out again, and lets the diagram float back to the floor",
                                         userId,
                                         "You grab the moon diagram and crumple it into a ball. Hey! That looks like a moon! How satisfying! You unfold it, and let it go."));
                         break;
