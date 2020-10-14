@@ -10,7 +10,40 @@ on:
     branches: [ master ]
 
 jobs:
+
   build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Install JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Build with Maven
+      run: |
+        ./mvnw -B --no-transfer-progress help:evaluate -Dexpression=project.version | grep -v INFO
+        ./mvnw -B --no-transfer-progress clean install -U \
+          -Dquarkus.container-image.push=true \
+          -Dquarkus.container-image.group=ebullient
+
+
+  native:
+    needs: build
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -20,6 +53,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     - uses: actions/cache@v1
       with:
         path: ~/.m2/repository
@@ -27,20 +67,19 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Install JDK ${{ matrix.java }}
+    - name: Install JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: ${{ matrix.java }}
+        java-version: 11
 
     - name: Pull Quarkus Native Builder Image ${{ matrix.graal }}-java${{ matrix.java }}
       run: docker pull quay.io/quarkus/ubi-quarkus-native-image:${{ matrix.graal }}-java${{ matrix.java }}
 
-    - name: Build with Maven
-      run: |
-        ./mvnw -B --no-transfer-progress help:evaluate -Dexpression=project.version | grep -v INFO
-        ./mvnw -B --no-transfer-progress clean install -U
-
     - name: Native Quarkus build with maven
       if: success()
       run: |
-        ./mvnw -B --no-transfer-progress clean install -Dnative -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:${{ matrix.graal }}-java${{ matrix.java }}
+        ./mvnw -B --no-transfer-progress clean install -Dnative \
+          -Dquarkus.native.container-build=true \
+          -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:${{ matrix.graal }}-java${{ matrix.java }} \
+          -Dquarkus.container-image.push=true \
+          -Dquarkus.container-image.group=ebullient
